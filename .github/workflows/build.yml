@@ -37,9 +37,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          VERSION=$(npx semantic-release --ci)
+          npx semantic-release --ci
+          VERSION=$(npx semantic-release --dry-run | grep 'next release version is' | awk '{print $NF}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION = ${VERSION}"
+          echo "VERSION = $VERSION"
 
       # Authenticate to ECR
       - name: Login to Amazon ECR
