@@ -40,13 +40,13 @@ jobs:
 
       # Authenticate to ECR
       - name: Login to Amazon ECR
-        if: steps.semantic.outputs.version != ''
+        if: steps.semantic.outputs.nextRelease.version != ''
         run: |
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 341743050818.dkr.ecr.us-east-1.amazonaws.com
 
       # Build and push Docker image
       - name: Build and push Docker image
-        if: steps.semantic.outputs.version != ''
+        if: steps.semantic.outputs.nextRelease.version != ''
         run: |
           IMAGE_REPO=341743050818.dkr.ecr.us-east-1.amazonaws.com/my_demo/sample_app_cicd
           VERSION=${{ steps.semantic.outputs.nextRelease.version }}
