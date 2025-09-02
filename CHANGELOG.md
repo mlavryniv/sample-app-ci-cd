@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v2.0.0...v2.1.0) (2025-09-02)
+
+
+### Features
+
+* test deployment release ([5007353](https://github.com/mlavryniv/sample-app-ci-cd/commit/5007353769cd63624b983a9dd1b58844e6af5c50))
+
 # [2.0.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v1.7.0...v2.0.0) (2025-09-02)
 
 
