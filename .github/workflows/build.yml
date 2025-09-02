@@ -40,7 +40,7 @@ jobs:
           npx semantic-release --ci
           VERSION=$(cat next-version.txt | grep NEXT_VERSION | cut -d'=' -f2)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION = $VERSION" 
+          echo "VERSION = $VERSION"
 
       # Authenticate to ECR
       - name: Login to Amazon ECR
