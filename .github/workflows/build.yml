@@ -51,7 +51,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           IMAGE_REPO=341743050818.dkr.ecr.us-east-1.amazonaws.com/my_demo/sample_app_cicd
-          VERSION=${{ steps.semantic.outputs.version }}
+          VERSION=${{ steps.semantic.outputs.version }} 
           
           docker build -t $IMAGE_REPO:$VERSION .
           docker push $IMAGE_REPO:$VERSION
