@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write 
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -34,11 +37,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          VERSION=$(npx semantic-release --ci)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Extract version
-        run: echo "RELEASE_VERSION=${{ steps.semantic.outputs.version }}" >> $GITHUB_ENV
+          npx semantic-release --ci
+          echo "version=$(npx semantic-release --dry-run | grep 'next release version is' | awk '{print $NF}')" >> $GITHUB_OUTPUT
 
       # Authenticate to ECR
       - name: Login to Amazon ECR
@@ -49,7 +49,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           IMAGE_REPO=341743050818.dkr.ecr.us-east-1.amazonaws.com/my_demo/sample_app_cicd
-          VERSION=${{ env.RELEASE_VERSION }}
+          VERSION=${{ steps.semantic.outputs.version }}
           
           docker build -t $IMAGE_REPO:$VERSION .
           docker push $IMAGE_REPO:$VERSION
