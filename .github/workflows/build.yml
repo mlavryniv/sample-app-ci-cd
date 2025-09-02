@@ -36,21 +36,23 @@ jobs:
         id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        run: npx semantic-release --ci
+        run: |
+          VERSION=$(npx semantic-release --ci)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION = ${VERSION}"
 
       # Authenticate to ECR
       - name: Login to Amazon ECR
-        if: steps.semantic.outputs.nextRelease.version != ''
+        # if: steps.semantic.outputs.version != ''
         run: |
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 341743050818.dkr.ecr.us-east-1.amazonaws.com
 
       # Build and push Docker image
       - name: Build and push Docker image
-        if: steps.semantic.outputs.nextRelease.version != ''
+        # if: steps.semantic.outputs.version != ''
         run: |
           IMAGE_REPO=341743050818.dkr.ecr.us-east-1.amazonaws.com/my_demo/sample_app_cicd
-          VERSION=${{ steps.semantic.outputs.nextRelease.version }}
-          echo "VERSION = ${VERSION}"
+          VERSION=${{ steps.semantic.outputs.version }}
           
           docker build -t $IMAGE_REPO:$VERSION .
           docker push $IMAGE_REPO:$VERSION
