@@ -1,0 +1,56 @@
+name: CD - Deploy to ECS
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Docker image version to deploy (default: latest)"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to ECS
+        run: |
+          CLUSTER="sample_app_cicd"
+          SERVICE="sample_app_cicd_task"
+          IMAGE="341743050818.dkr.ecr.us-east-1.amazonaws.com/my_demo/sample_app_cicd:${{ github.event.inputs.version }}"
+
+          # Update task definition with new image
+          TASK_DEF=$(aws ecs describe-services --cluster $CLUSTER --services $SERVICE --query 'services[0].taskDefinition' --output text)
+          NEW_TASK_DEF=$(echo $TASK_DEF | cut -d'/' -f2)
+
+          # Grab current task definition JSON
+          aws ecs describe-task-definition --task-definition $NEW_TASK_DEF --query taskDefinition > taskdef.json
+
+          # Replace image
+          cat taskdef.json | jq --arg IMAGE "$IMAGE" '.containerDefinitions[0].image=$IMAGE' > new-taskdef.json
+
+          # Register new task definition
+          NEW_REVISION=$(aws ecs register-task-definition --cli-input-json file://new-taskdef.json --query 'taskDefinition.taskDefinitionArn' --output text)
+
+          # Update service to use new revision
+          aws ecs update-service --cluster $CLUSTER --service $SERVICE --task-definition $NEW_REVISION
+
+      - name: Rollback option
+        if: failure()
+        run: |
+          echo "Deployment failed! Rolling back..."
+          # Describe service to get last stable revision
+          CLUSTER="sample_app_cicd"
+          SERVICE="sample_app_cicd_task"
+          LAST_REV=$(aws ecs describe-services --cluster $CLUSTER --services $SERVICE --query 'services[0].taskDefinition' --output text)
+          aws ecs update-service --cluster $CLUSTER --service $SERVICE --task-definition $LAST_REV
