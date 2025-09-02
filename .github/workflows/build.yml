@@ -32,10 +32,10 @@ jobs:
       - name: Run semantic-release
         id: semantic
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          npx semantic-release --ci
-          echo "version=$(npx semantic-release --dry-run | grep 'next release version is' | awk '{print $NF}')" >> $GITHUB_OUTPUT
+          VERSION=$(npx semantic-release --ci)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Extract version
         run: echo "RELEASE_VERSION=${{ steps.semantic.outputs.version }}" >> $GITHUB_ENV
