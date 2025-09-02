@@ -37,7 +37,7 @@ jobs:
           aws ecs describe-task-definition --task-definition $NEW_TASK_DEF --query 'taskDefinition' > taskdef.json
 
           # Strip unwanted fields
-          # jq 'del(.status, .taskDefinitionArn, .revision, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' taskdef.json > clean-taskdef.json
+          jq 'del(.status, .taskDefinitionArn, .revision, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' taskdef.json > clean-taskdef.json
 
           # Update container image
           jq --arg IMAGE "$IMAGE" '.containerDefinitions[0].image=$IMAGE' clean-taskdef.json > new-taskdef.json
