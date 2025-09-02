@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v1.6.0...v1.7.0) (2025-09-02)
+
+
+### Features
+
+* **auth:** test MEGA release ([0339dfc](https://github.com/mlavryniv/sample-app-ci-cd/commit/0339dfc6eb67301d6702a628ca45274123e70fa5))
+
 # [1.6.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v1.5.0...v1.6.0) (2025-09-02)
 
 
