@@ -5,12 +5,12 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     "@semantic-release/git",
-    "@semantic-release/github",
     [
       "@semantic-release/exec",
       {
         "prepareCmd": "echo NEXT_VERSION=${nextRelease.version} > next-version.txt"
       }
-    ]
+    ],
+    "@semantic-release/github"
   ]
 }
