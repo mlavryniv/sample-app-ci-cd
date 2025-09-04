@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v2.1.0...v2.2.0) (2025-09-04)
+
+
+### Features
+
+* samthing important change ([e23cfb1](https://github.com/mlavryniv/sample-app-ci-cd/commit/e23cfb1b993b4d662f6cb7e6e041bc4155b21694))
+
 # [2.1.0](https://github.com/mlavryniv/sample-app-ci-cd/compare/v2.0.0...v2.1.0) (2025-09-02)
 
 
